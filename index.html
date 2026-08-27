@@ -1864,6 +1864,8 @@ function Settings({ token, user }) {
         <SettingField label="Organization name" value={settings.orgName || ""} onSave={v=>saveOne("orgName", v)} />
         <SettingField label="Contact email" value={settings.contactEmail || ""} onSave={v=>saveOne("contactEmail", v)} />
         <SettingField label="Annual member fee ($)" value={settings.annualFee || ""} onSave={v=>saveOne("annualFee", v)} />
+        <SettingField label="Booking contact name" value={settings.bookingContactName || ""} onSave={v=>saveOne("bookingContactName", v)} />
+        <SettingField label="Booking contact mobile" value={settings.bookingContactPhone || ""} onSave={v=>saveOne("bookingContactPhone", v)} />
       </div>
       <div className="card">
         <h3 style={{marginTop:0}}>Your account</h3>
