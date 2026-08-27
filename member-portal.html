@@ -572,10 +572,10 @@ function RsvpTab({ member, family }) {
           ))}
 
           <div className="card" style={{marginTop:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div style={{fontWeight:700}}>Total Amount</div>
+            <div style={{fontWeight:700}}>Estimated total</div>
             <div style={{fontFamily:"'Newsreader',serif",fontSize:22,fontWeight:700,color:"var(--teal-900)"}}>${total}</div>
           </div>
-          <p style={{color:"var(--muted)",fontSize:11.5,marginTop:6}}>The committee will confirm your booking once the payment has been verified.</p>
+          <p style={{color:"var(--muted)",fontSize:11.5,marginTop:6}}>This is an estimate — the committee confirms your booking and payment separately.</p>
 
           <button className="btn gold btn-block" style={{marginTop:6}} onClick={submit} disabled={submitting}>
             {submitting ? "Sending…" : "Submit RSVP"}
@@ -589,9 +589,11 @@ function RsvpTab({ member, family }) {
 function BookingsTab({ memberId }) {
   const [bookings, setBookings] = useState(null);
   const [error, setError] = useState("");
+  const [contact, setContact] = useState(null);
 
   useEffect(() => {
     api("memberBookings", { memberId }).then(r => setBookings(r.data)).catch(e => setError(e.message));
+    api("publicConfig", {}).then(r => setContact(r.data)).catch(()=>{});
   }, [memberId]);
 
   if (error) return <div className="error-msg">{error}</div>;
@@ -606,6 +608,11 @@ function BookingsTab({ memberId }) {
           <StatusBadge status={b.Status} />
         </div>
       ))}
+      {contact && contact.bookingContactName && contact.bookingContactPhone && (
+        <p style={{color:"var(--muted)",fontSize:12.5,marginTop:16,paddingTop:14,borderTop:"1px solid var(--border)"}}>
+          Want to edit or modify a booking? Contact {contact.bookingContactName} on {contact.bookingContactPhone}.
+        </p>
+      )}
     </div>
   );
 }
