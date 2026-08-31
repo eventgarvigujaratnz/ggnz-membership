@@ -387,6 +387,7 @@ function guestCharge(tierKey, meal) {
 
 function RsvpTab({ member, family }) {
   const [events, setEvents] = useState(null);
+  const [paymentInfo, setPaymentInfo] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -407,6 +408,7 @@ function RsvpTab({ member, family }) {
 
   useEffect(() => {
     api("publicEvents", {}).then(r => setEvents(r.data)).catch(e => setError(e.message));
+    api("publicConfig", {}).then(r => setPaymentInfo(r.data)).catch(()=>{});
   }, []);
 
   const toggleAttending = (id, currentlyIn) => setAttending({ ...attending, [id]: !currentlyIn });
@@ -538,7 +540,7 @@ function RsvpTab({ member, family }) {
           })}
 
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:18,marginBottom:10}}>
-            <div className="section-label" style={{margin:0}}>Guests (relatives only, Strcitly No Friends PLEASE)</div>
+            <div className="section-label" style={{margin:0}}>Guests (relatives only, non-members)</div>
             <button className="btn ghost sm" type="button" onClick={addGuest}>+ Add Guest</button>
           </div>
           <p style={{color:"var(--muted)",fontSize:12,marginTop:-4}}>Adult (12+) = $20 · Child (5–12) = $10 · Under 5 = Free — only charged if a meal is selected.</p>
@@ -572,10 +574,28 @@ function RsvpTab({ member, family }) {
           ))}
 
           <div className="card" style={{marginTop:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div style={{fontWeight:700}}>Total Amount</div>
+            <div style={{fontWeight:700}}>Estimated total</div>
             <div style={{fontFamily:"'Newsreader',serif",fontSize:22,fontWeight:700,color:"var(--teal-900)"}}>${total}</div>
           </div>
-          <p style={{color:"var(--muted)",fontSize:11.5,marginTop:6}}>The committee will confirm your booking once payment has been verified.</p>
+          <p style={{color:"var(--muted)",fontSize:11.5,marginTop:6}}>This is an estimate — the committee confirms your booking and payment separately.</p>
+
+          <div className="card" style={{marginTop:12}}>
+            <div style={{fontWeight:700,marginBottom:10}}>How to pay</div>
+            {paymentInfo && paymentInfo.bankAccountNumber ? (
+              <div style={{background:"var(--bg)",borderRadius:8,padding:12,marginBottom:10}}>
+                <div style={{fontSize:12.5,fontWeight:700,color:"var(--teal-800)",marginBottom:4}}>🏦 Bank Transfer</div>
+                <div style={{fontSize:13}}>{paymentInfo.bankAccountName}</div>
+                <div style={{fontSize:13,fontFamily:"monospace"}}>{paymentInfo.bankAccountNumber}</div>
+                <div style={{fontSize:11.5,color:"var(--muted)",marginTop:4}}>Please use your Member ID ({member.MemberID}) as the payment reference.</div>
+              </div>
+            ) : (
+              <p style={{color:"var(--muted)",fontSize:12.5,marginBottom:10}}>Bank transfer details will be shared separately — contact the committee if you need them now.</p>
+            )}
+            <div style={{background:"#f2f2f2",borderRadius:8,padding:12,opacity:0.6}}>
+              <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:4}}>💳 Online Payment</div>
+              <div style={{fontSize:12.5,color:"var(--muted)"}}>Coming soon</div>
+            </div>
+          </div>
 
           <button className="btn gold btn-block" style={{marginTop:6}} onClick={submit} disabled={submitting}>
             {submitting ? "Sending…" : "Submit RSVP"}
@@ -610,7 +630,7 @@ function BookingsTab({ memberId }) {
       ))}
       {contact && contact.bookingContactName && contact.bookingContactPhone && (
         <p style={{color:"var(--muted)",fontSize:12.5,marginTop:16,paddingTop:14,borderTop:"1px solid var(--border)"}}>
-          Want to edit or modify a booking? Please Contact {contact.bookingContactName} on {contact.bookingContactPhone}.
+          Want to edit or modify a booking? Contact {contact.bookingContactName} on {contact.bookingContactPhone}.
         </p>
       )}
     </div>
@@ -627,7 +647,7 @@ function App() {
     <div className="wrap">
       <div className="hero">
         <img src="ggnz-logo.png" alt="GGNZ logo" style={{width:76,height:76,margin:"0 auto 10px",display:"block"}} />
-        <div className="org">Garvi Gujarat NZ Charitable Turst</div>
+        <div className="org">Garvi Gujarat NZ</div>
         <h1>Membership Portal</h1>
         <p>Your card, your RSVPs, all in one place</p>
       </div>
