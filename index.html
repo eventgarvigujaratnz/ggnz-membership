@@ -1869,6 +1869,8 @@ function Settings({ token, user }) {
         <SettingField label="Facebook page URL" value={settings.facebookUrl || ""} onSave={v=>saveOne("facebookUrl", v)} />
         <SettingField label="Instagram profile URL" value={settings.instagramUrl || ""} onSave={v=>saveOne("instagramUrl", v)} />
         <SettingField label="YouTube channel URL" value={settings.youtubeUrl || ""} onSave={v=>saveOne("youtubeUrl", v)} />
+        <SettingField label="Bank account name" value={settings.bankAccountName || ""} onSave={v=>saveOne("bankAccountName", v)} />
+        <SettingField label="Bank account number" value={settings.bankAccountNumber || ""} onSave={v=>saveOne("bankAccountNumber", v)} />
       </div>
       <div className="card">
         <h3 style={{marginTop:0}}>Your account</h3>
