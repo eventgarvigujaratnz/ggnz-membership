@@ -1524,6 +1524,9 @@ function Reports({ token, user }) {
   });
   const [attendance, setAttendance] = useState(null);
   const [attendanceError, setAttendanceError] = useState("");
+  const [attendanceGenerating, setAttendanceGenerating] = useState(false);
+  const [attendanceSheet, setAttendanceSheet] = useState(null);
+  const [lowThreshold, setLowThreshold] = useState(6);
   const [pendingEventId, setPendingEventId] = useState("");
   const [pending, setPending] = useState(null);
   const [pendingError, setPendingError] = useState("");
@@ -1546,9 +1549,18 @@ function Reports({ token, user }) {
   }, [selectedEventId, token]);
 
   useEffect(() => {
-    setAttendanceError("");
+    setAttendanceError(""); setAttendanceSheet(null);
     api("attendanceReport", { fyStartYear: fyYear }, token).then(r => setAttendance(r.data)).catch(e => setAttendanceError(e.message));
   }, [fyYear, token]);
+
+  const generateAttendanceSheet = async () => {
+    setAttendanceGenerating(true); setAttendanceError(""); setAttendanceSheet(null);
+    try {
+      const res = await api("generateAttendanceSheet", { fyStartYear: fyYear, lowThreshold }, token);
+      setAttendanceSheet(res.data);
+    } catch (e) { setAttendanceError(e.message); }
+    finally { setAttendanceGenerating(false); }
+  };
 
   useEffect(() => {
     if (data && data.pendingRsvpEventId && !pendingEventId) setPendingEventId(data.pendingRsvpEventId);
@@ -1715,6 +1727,24 @@ function Reports({ token, user }) {
             })}
           </select>
         </div>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+          <label style={{fontSize:12.5,color:"var(--muted)"}}>Highlight members with</label>
+          <input type="number" min="0" value={lowThreshold} onChange={e=>setLowThreshold(e.target.value)}
+            style={{width:56,padding:"4px 6px",border:"1px solid var(--border)",borderRadius:6,fontSize:13}} />
+          <label style={{fontSize:12.5,color:"var(--muted)"}}>or fewer events</label>
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+          <div style={{fontSize:12.5,color:"var(--muted)"}}>View on a bigger screen or print this list</div>
+          <button className="btn ghost sm" onClick={generateAttendanceSheet} disabled={attendanceGenerating || !attendance || attendance.length===0}>
+            {attendanceGenerating ? "Generating…" : "Generate sheet"}
+          </button>
+        </div>
+        {attendanceSheet && (
+          <p style={{color:"var(--muted)",fontSize:12.5,marginBottom:10}}>
+            Created <strong>{attendanceSheet.count}</strong> row{attendanceSheet.count===1?"":"s"} in a sheet tab called <code>{attendanceSheet.sheetName}</code>, highlighting anyone with {attendanceSheet.threshold} or fewer events. {" "}
+            <a href={attendanceSheet.sheetUrl} target="_blank" rel="noopener noreferrer">Open it to print →</a>
+          </p>
+        )}
         {attendanceError && <div className="error-msg">{attendanceError}</div>}
         {!attendance && !attendanceError && <div style={{color:"var(--muted)",fontSize:13}}>Loading…</div>}
         {attendance && (
