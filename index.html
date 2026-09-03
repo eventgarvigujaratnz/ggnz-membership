@@ -224,7 +224,7 @@ const READ_ONLY_ACTIONS = [
   'login', 'validateSession', 'dashboardSummary', 'listMembers', 'findMember',
   'listEvents', 'listBookings', 'listPayments', 'paymentGroups', 'listVolunteers',
   'listCheckins', 'checkInLookup', 'listSettings', 'listUsers', 'mealReport',
-  'attendanceReport', 'pendingRsvp'
+  'attendanceReport', 'pendingRsvp', 'bookingsPageData', 'paymentsPageData', 'checkinPageData'
 ];
 
 async function api(action, params, token) {
@@ -240,14 +240,15 @@ async function api(action, params, token) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       response = await fetch(url, { method: "GET" });
-      break; // got a response — stop retrying, even if it's a non-ok status
+      if (!response.ok && attempt < maxAttempts) { await sleep_(attempt * 700); continue; }
+      break; // got a usable response, or this was the last attempt — stop either way
     } catch (networkErr) {
       if (attempt < maxAttempts) { await sleep_(attempt * 700); continue; }
       throw new Error("Network error contacting the API (tried " + maxAttempts + " times)");
     }
   }
   if (!response.ok) {
-    throw new Error("Server error (" + response.status + ") contacting the API");
+    throw new Error("Server error (" + response.status + ") contacting the API" + (maxAttempts > 1 ? " after " + maxAttempts + " tries" : ""));
   }
   const result = await response.json();
   if (!result.ok) throw new Error(result.error || "Request failed");
