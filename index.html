@@ -267,6 +267,7 @@ const NAV_ITEMS = [
   { key: "checkin", label: "QR Check-In", icon: "📷" },
   { key: "reports", label: "Reports", icon: "📊" },
   { key: "communications", label: "Communications", icon: "📢" },
+  { key: "feedback", label: "Feedback", icon: "💬" },
   { key: "volunteers", label: "Volunteers", icon: "🤝" },
   { key: "settings", label: "Settings", icon: "⚙" }
 ];
@@ -408,6 +409,7 @@ function pageSubtitle(page) {
     checkin: "Check members in at the door",
     reports: "Trends across membership, events and finances",
     communications: "Email and announcements to members",
+    feedback: "Anonymous member feedback — no names attached",
     volunteers: "Recruit and coordinate volunteers",
     settings: "Organization, users and preferences"
   };
@@ -424,6 +426,7 @@ function Page({ page, token, user, onNavigate }) {
     case "checkin": return <CheckIn token={token} />;
     case "reports": return <Reports token={token} user={user} />;
     case "communications": return <Communications token={token} />;
+    case "feedback": return <Feedback token={token} />;
     case "volunteers": return <Volunteers token={token} />;
     case "settings": return <Settings token={token} user={user} />;
     default: return null;
@@ -1865,6 +1868,67 @@ function VolunteerModal({ record, onClose, onSave }) {
           <button className="btn gold" onClick={()=>onSave(form)}>Save</button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   FEEDBACK  (anonymous — no member identity is ever shown here,
+   because none is ever collected)
+   ============================================================ */
+function Feedback({ token }) {
+  const [rows, setRows] = useState(null);
+  const [error, setError] = useState("");
+  const [unreviewedOnly, setUnreviewedOnly] = useState(true);
+
+  const load = useCallback(() => {
+    api("listFeedback", {}, token).then(r => setRows(r.data)).catch(e => setError(e.message));
+  }, [token]);
+  useEffect(load, [load]);
+
+  const markReviewed = async (id) => {
+    await api("markFeedbackReviewed", { id }, token);
+    load();
+  };
+
+  const filtered = useMemo(() => {
+    if (!rows) return [];
+    return unreviewedOnly ? rows.filter(r => r.Reviewed !== "TRUE") : rows;
+  }, [rows, unreviewedOnly]);
+
+  if (error) return <ApiErrorPanel message={error} />;
+  if (!rows) return <LoadingPanel />;
+
+  return (
+    <div>
+      <div className="toolbar">
+        <label style={{display:"flex",alignItems:"center",gap:6,fontSize:14}}>
+          <input type="checkbox" checked={unreviewedOnly} onChange={e=>setUnreviewedOnly(e.target.checked)} />
+          Unreviewed only
+        </label>
+        <div style={{color:"var(--muted)",fontSize:13}}>{filtered.length} of {rows.length} submission{rows.length===1?"":"s"}</div>
+      </div>
+      {filtered.length === 0 ? <EmptyRow text={unreviewedOnly ? "Nothing waiting on review" : "No feedback submitted yet"} /> : (
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {filtered.map(f => (
+            <div key={f.FeedbackID} className="card" style={{padding:14}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12,marginBottom:6}}>
+                <div>
+                  <span style={{color:"var(--marigold-500)",letterSpacing:2}}>{"★".repeat(Number(f.Rating)||0)}{"☆".repeat(5-(Number(f.Rating)||0))}</span>
+                  <span style={{marginLeft:10,fontSize:13,color:"var(--muted)"}}>{f.Category} · {f.EventName}</span>
+                </div>
+                <span style={{fontSize:12,color:"var(--muted)",whiteSpace:"nowrap"}}>{formatDate(f.Timestamp)}</span>
+              </div>
+              <div style={{whiteSpace:"pre-wrap"}}>{f.Comment}</div>
+              {f.Reviewed !== "TRUE" && (
+                <div style={{marginTop:10}}>
+                  <button className="btn ghost sm" onClick={()=>markReviewed(f.FeedbackID)}>Mark reviewed</button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
