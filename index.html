@@ -933,7 +933,7 @@ function Events({ token }) {
         <div className="event-card" key={e.EventID}>
           <div>
             <div className="ev-name">{e.Name}</div>
-            <div className="ev-meta">{formatDate(e.Date)} · {e.Location || "Location TBC"} · Capacity {e.Capacity || "—"}</div>
+            <div className="ev-meta">{formatDate(e.Date)} · {e.Location || "Location TBC"} · Capacity {e.Capacity || "—"}{e.RsvpDeadline && e.Status === "Open for RSVP" ? <> · RSVP by {formatDate(e.RsvpDeadline)}</> : null}</div>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
             <StatusBadge status={e.Status} />
@@ -951,6 +951,7 @@ function EventModal({ record, onClose, onSave }) {
   const [form, setForm] = useState({
     EventID: record.EventID || "", Name: record.Name || "",
     Date: record.Date ? String(record.Date).slice(0,10) : "",
+    RsvpDeadline: record.RsvpDeadline ? String(record.RsvpDeadline).slice(0,10) : "",
     Location: record.Location || "", Capacity: record.Capacity || "",
     Description: record.Description || "", Status: record.Status || "Planned"
   });
@@ -961,6 +962,11 @@ function EventModal({ record, onClose, onSave }) {
         <h3>{record.EventID ? "Edit event" : "Create event"}</h3>
         <div className="field"><label>Event name</label><input value={form.Name} onChange={set("Name")} /></div>
         <div className="field"><label>Date</label><input type="date" value={form.Date} onChange={set("Date")} /></div>
+        <div className="field">
+          <label>RSVP deadline</label>
+          <input type="date" value={form.RsvpDeadline} onChange={set("RsvpDeadline")} />
+          <div style={{fontSize:"12px", color:"#888", marginTop:"4px"}}>Optional — if left blank, the RSVP-open notification defaults to the event date itself.</div>
+        </div>
         <div className="field"><label>Location</label><input value={form.Location} onChange={set("Location")} /></div>
         <div className="field"><label>Capacity</label><input type="number" value={form.Capacity} onChange={set("Capacity")} /></div>
         <div className="field"><label>Description</label><input value={form.Description} onChange={set("Description")} /></div>
