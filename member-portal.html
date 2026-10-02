@@ -442,8 +442,12 @@ function RsvpTab({ member, family }) {
   const removeGuest = (id) => setGuests(guests.filter(g => g.id !== id));
 
   const activeAttendingCount = everyone.filter(p => isActive(p) && attending[p.MemberID] !== false).length;
-  const planSignupCharge = planSignup ? activeAttendingCount * 80 : 0;
-  const total = everyone.reduce((sum, p) => (isActive(p) && attending[p.MemberID] !== false) ? sum + memberCharge(p.AgeCategory, p.MealPlan, mealChoice[p.MemberID]) : sum, 0)
+  const planPrice = (paymentInfo && Number(paymentInfo.halfYearlyPlanPrice)) || 80; // falls back to 80 if publicConfig hasn't loaded yet or Settings has no override
+  const planSignupCharge = planSignup ? activeAttendingCount * planPrice : 0;
+  // When planSignup is checked, the per-member meal charge is waived —
+  // the Half-Yearly Meal Plan covers THIS event's meal too, not just
+  // future ones, so it isn't stacked on top of the normal $15 charge.
+  const total = everyone.reduce((sum, p) => (isActive(p) && attending[p.MemberID] !== false) ? sum + (planSignup ? 0 : memberCharge(p.AgeCategory, p.MealPlan, mealChoice[p.MemberID])) : sum, 0)
     + guests.reduce((sum, g) => sum + guestCharge(g.Tier, g.Meal), 0)
     + planSignupCharge;
 
@@ -514,7 +518,7 @@ function RsvpTab({ member, family }) {
             const active = isActive(p);
             const isIn = active && attending[p.MemberID] !== false;
             const meal = mealChoice[p.MemberID] || "No Meal";
-            const charge = isIn ? memberCharge(p.AgeCategory, p.MealPlan, meal) : 0;
+            const charge = isIn ? (planSignup ? 0 : memberCharge(p.AgeCategory, p.MealPlan, meal)) : 0;
             const isPaidPlan = p.MealPlan === "Yearly" || p.MealPlan === "Half-Yearly";
 
             if (!active) {
@@ -561,7 +565,9 @@ function RsvpTab({ member, family }) {
                     </button>
                   ))}
                 </div>
-                <div style={{marginTop:10,fontSize:13,fontWeight:700,color:"var(--teal-900)"}}>Charge: ${charge}</div>
+                <div style={{marginTop:10,fontSize:13,fontWeight:700,color:"var(--teal-900)"}}>
+                  Charge: ${charge}{isIn && planSignup && meal !== "No Meal" && <span style={{fontWeight:400,color:"var(--muted)",fontSize:11.5}}> (meal covered by plan signup)</span>}
+                </div>
               </div>
             );
           })}
@@ -570,7 +576,7 @@ function RsvpTab({ member, family }) {
             <label style={{display:"flex",alignItems:"flex-start",gap:10,cursor:"pointer"}}>
               <input type="checkbox" checked={planSignup} onChange={e=>setPlanSignup(e.target.checked)} style={{marginTop:3,width:17,height:17,flexShrink:0}} />
               <span>
-                <strong>Sign up for the Half-Yearly Meal Plan</strong> — $80 per attending member, covers event meals for 6 months.
+                <strong>Sign up for the Half-Yearly Meal Plan</strong> — ${planPrice} per attending member, covers event meals for 6 months.
                 {planSignup && activeAttendingCount > 0 && (
                   <div style={{marginTop:4,fontSize:12.5,color:"var(--teal-800)"}}>
                     Applies to {activeAttendingCount} attending member{activeAttendingCount===1?"":"s"}: +${planSignupCharge}
