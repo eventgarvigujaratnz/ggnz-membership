@@ -416,6 +416,7 @@ function RsvpTab({ member, family }) {
   const [attending, setAttending] = useState({});   // MemberID -> bool
   const [mealChoice, setMealChoice] = useState({});  // MemberID -> meal string
   const [guests, setGuests] = useState([]);          // [{id, Name, Tier, Meal}]
+  const [planSignup, setPlanSignup] = useState(false); // one family-wide toggle for the $80 Half-Yearly Meal Plan
   const [submitting, setSubmitting] = useState(false);
   const messageRef = useRef(null);
 
@@ -440,8 +441,11 @@ function RsvpTab({ member, family }) {
   const updateGuest = (id, patch) => setGuests(guests.map(g => g.id === id ? { ...g, ...patch } : g));
   const removeGuest = (id) => setGuests(guests.filter(g => g.id !== id));
 
+  const activeAttendingCount = everyone.filter(p => isActive(p) && attending[p.MemberID] !== false).length;
+  const planSignupCharge = planSignup ? activeAttendingCount * 80 : 0;
   const total = everyone.reduce((sum, p) => (isActive(p) && attending[p.MemberID] !== false) ? sum + memberCharge(p.AgeCategory, p.MealPlan, mealChoice[p.MemberID]) : sum, 0)
-    + guests.reduce((sum, g) => sum + guestCharge(g.Tier, g.Meal), 0);
+    + guests.reduce((sum, g) => sum + guestCharge(g.Tier, g.Meal), 0)
+    + planSignupCharge;
 
   const submittingRef = useRef(false); // synchronous guard — catches double-taps React state can't catch in time
 
@@ -459,7 +463,8 @@ function RsvpTab({ member, family }) {
       const records = [
         ...party.map(p => ({
           EventID: selectedEvent.EventID, MemberID: p.MemberID, Name: p.Name,
-          Party: 1, Meal: mealChoice[p.MemberID] || "No Meal", BookedBy: member.MemberID
+          Party: 1, Meal: mealChoice[p.MemberID] || "No Meal", BookedBy: member.MemberID,
+          PlanSignupRequested: planSignup
         })),
         ...guests.map(g => ({
           EventID: selectedEvent.EventID, MemberID: "", Name: g.Name + " (Guest)",
@@ -477,7 +482,7 @@ function RsvpTab({ member, family }) {
       } else {
         setError("Nothing was submitted — " + skipped.map(s => s.name + ": " + s.reason).join("; "));
       }
-      setAttending({}); setMealChoice({}); setGuests([]); setSelectedEvent(null);
+      setAttending({}); setMealChoice({}); setGuests([]); setSelectedEvent(null); setPlanSignup(false);
     } catch (e) { setError(e.message); }
     finally { setSubmitting(false); submittingRef.current = false; }
   };
@@ -561,6 +566,23 @@ function RsvpTab({ member, family }) {
             );
           })}
 
+          <div className="card" style={{marginTop:14, background:"var(--bg)"}}>
+            <label style={{display:"flex",alignItems:"flex-start",gap:10,cursor:"pointer"}}>
+              <input type="checkbox" checked={planSignup} onChange={e=>setPlanSignup(e.target.checked)} style={{marginTop:3,width:17,height:17,flexShrink:0}} />
+              <span>
+                <strong>Sign up for the Half-Yearly Meal Plan</strong> — $80 per attending member, covers event meals for 6 months.
+                {planSignup && activeAttendingCount > 0 && (
+                  <div style={{marginTop:4,fontSize:12.5,color:"var(--teal-800)"}}>
+                    Applies to {activeAttendingCount} attending member{activeAttendingCount===1?"":"s"}: +${planSignupCharge}
+                  </div>
+                )}
+                {planSignup && activeAttendingCount === 0 && (
+                  <div style={{marginTop:4,fontSize:12.5,color:"var(--muted)"}}>No active attending members selected yet — nothing will be charged for this until someone is marked attending.</div>
+                )}
+              </span>
+            </label>
+          </div>
+
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:18,marginBottom:10}}>
             <div className="section-label" style={{margin:0}}>Guests (relatives only, Strictly NO FRIEND PLEASE)</div>
             <button className="btn ghost sm" type="button" onClick={addGuest}>+ Add Guest</button>
@@ -595,9 +617,16 @@ function RsvpTab({ member, family }) {
             </div>
           ))}
 
-          <div className="card" style={{marginTop:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div style={{fontWeight:700}}>Total Amount</div>
-            <div style={{fontFamily:"'Newsreader',serif",fontSize:22,fontWeight:700,color:"var(--teal-900)"}}>${total}</div>
+          <div className="card" style={{marginTop:16}}>
+            {planSignupCharge > 0 && (
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"var(--muted)",marginBottom:8}}>
+                <span>Half-Yearly Meal Plan × {activeAttendingCount}</span><span>${planSignupCharge}</span>
+              </div>
+            )}
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <div style={{fontWeight:700}}>Total Amount</div>
+              <div style={{fontFamily:"'Newsreader',serif",fontSize:22,fontWeight:700,color:"var(--teal-900)"}}>${total}</div>
+            </div>
           </div>
           <p style={{color:"var(--muted)",fontSize:11.5,marginTop:6}}>The committee will confirm your booking once the payment has been verified.</p>
 
