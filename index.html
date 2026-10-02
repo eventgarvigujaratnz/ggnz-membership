@@ -1149,7 +1149,16 @@ function Payments({ token }) {
             <tbody>
               {groups.map(g => (
                 <tr key={g.key}>
-                  <td>{g.bookerName}{g.count > 1 && <span style={{color:"var(--muted)",fontSize:11.5}}> (+{g.count - 1} more)</span>}</td>
+                  <td>
+                    {g.bookerName}{g.count > 1 && <span style={{color:"var(--muted)",fontSize:11.5}}> (+{g.count - 1} more)</span>}
+                    {g.planSignupNames && g.planSignupNames.length > 0 && (
+                      <div style={{marginTop:3}}>
+                        <span className="badge" style={{background:"var(--marigold-100,#fdf0d5)",color:"var(--marigold-700,#8a5a00)",fontSize:10.5}}>
+                          🍽 Plan signup: {g.planSignupNames.join(", ")}
+                        </span>
+                      </div>
+                    )}
+                  </td>
                   <td>{g.EventID}</td>
                   <td style={{fontWeight:700}}>${g.total}</td>
                   <td style={{whiteSpace:"nowrap"}}>
@@ -1184,12 +1193,12 @@ function Payments({ token }) {
         )}
       </div></div>
       {adding && <PaymentModal onClose={()=>setAdding(false)} onSave={savePayment} />}
-      {confirming && <ConfirmPaymentModal name={confirming.group.bookerName} count={confirming.group.count} total={confirming.group.total} eventId={confirming.group.EventID} onClose={()=>setConfirming(null)} onConfirm={confirmPayment} />}
+      {confirming && <ConfirmPaymentModal name={confirming.group.bookerName} count={confirming.group.count} total={confirming.group.total} eventId={confirming.group.EventID} planSignupNames={confirming.group.planSignupNames} onClose={()=>setConfirming(null)} onConfirm={confirmPayment} />}
     </div>
   );
 }
 
-function ConfirmPaymentModal({ name, count, total, eventId, onClose, onConfirm }) {
+function ConfirmPaymentModal({ name, count, total, eventId, planSignupNames, onClose, onConfirm }) {
   const [method, setMethod] = useState("Cash");
   const [submitting, setSubmitting] = useState(false);
   const submit = async () => { setSubmitting(true); await onConfirm(method); setSubmitting(false); };
@@ -1204,6 +1213,11 @@ function ConfirmPaymentModal({ name, count, total, eventId, onClose, onConfirm }
             <React.Fragment>This marks <strong>{name}</strong>'s booking for {eventId} as Confirmed and Paid (${total}), logs a payment record, and emails them a confirmation.</React.Fragment>
           )}
         </p>
+        {planSignupNames && planSignupNames.length > 0 && (
+          <p style={{background:"#fdf0d5",color:"#8a5a00",fontSize:13,padding:"8px 10px",borderRadius:6,marginTop:-4}}>
+            🍽 <strong>{planSignupNames.join(", ")}</strong> signed up for the Half-Yearly Meal Plan ($80 each, included in the total above). Remember to set their MealPlan and dates manually in Membership once this is confirmed — it isn't done automatically.
+          </p>
+        )}
         <div className="field">
           <label>Payment method</label>
           <select value={method} onChange={e=>setMethod(e.target.value)}>
