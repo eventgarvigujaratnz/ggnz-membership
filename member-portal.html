@@ -441,9 +441,13 @@ function RsvpTab({ member, family }) {
   const updateGuest = (id, patch) => setGuests(guests.map(g => g.id === id ? { ...g, ...patch } : g));
   const removeGuest = (id) => setGuests(guests.filter(g => g.id !== id));
 
-  const activeAttendingCount = everyone.filter(p => isActive(p) && attending[p.MemberID] !== false).length;
+  // Half-Yearly Meal Plan only applies to members 12+ — kids under 12
+  // already eat free at every event regardless of any plan (see
+  // memberCharge above), so charging them $80 for the plan would be
+  // charging for something they get for free anyway.
+  const planEligibleCount = everyone.filter(p => isActive(p) && attending[p.MemberID] !== false && p.AgeCategory !== "Under 12Y").length;
   const planPrice = (paymentInfo && Number(paymentInfo.halfYearlyPlanPrice)) || 80; // falls back to 80 if publicConfig hasn't loaded yet or Settings has no override
-  const planSignupCharge = planSignup ? activeAttendingCount * planPrice : 0;
+  const planSignupCharge = planSignup ? planEligibleCount * planPrice : 0;
   // When planSignup is checked, the per-member meal charge is waived —
   // the Half-Yearly Meal Plan covers THIS event's meal too, not just
   // future ones, so it isn't stacked on top of the normal $15 charge.
@@ -468,7 +472,7 @@ function RsvpTab({ member, family }) {
         ...party.map(p => ({
           EventID: selectedEvent.EventID, MemberID: p.MemberID, Name: p.Name,
           Party: 1, Meal: mealChoice[p.MemberID] || "No Meal", BookedBy: member.MemberID,
-          PlanSignupRequested: planSignup
+          PlanSignupRequested: planSignup && p.AgeCategory !== "Under 12Y"
         })),
         ...guests.map(g => ({
           EventID: selectedEvent.EventID, MemberID: "", Name: g.Name + " (Guest)",
@@ -566,7 +570,7 @@ function RsvpTab({ member, family }) {
                   ))}
                 </div>
                 <div style={{marginTop:10,fontSize:13,fontWeight:700,color:"var(--teal-900)"}}>
-                  Charge: ${charge}{isIn && planSignup && meal !== "No Meal" && <span style={{fontWeight:400,color:"var(--muted)",fontSize:11.5}}> (meal covered by plan signup)</span>}
+                  Charge: ${charge}{isIn && planSignup && meal !== "No Meal" && p.AgeCategory !== "Under 12Y" && <span style={{fontWeight:400,color:"var(--muted)",fontSize:11.5}}> (meal covered by plan signup)</span>}
                 </div>
               </div>
             );
@@ -576,14 +580,14 @@ function RsvpTab({ member, family }) {
             <label style={{display:"flex",alignItems:"flex-start",gap:10,cursor:"pointer"}}>
               <input type="checkbox" checked={planSignup} onChange={e=>setPlanSignup(e.target.checked)} style={{marginTop:3,width:17,height:17,flexShrink:0}} />
               <span>
-                <strong>Sign up for the Half-Yearly Meal Plan</strong> — ${planPrice} per attending member, covers event meals for 6 months.
-                {planSignup && activeAttendingCount > 0 && (
+                <strong>Sign up for the Half-Yearly Meal Plan</strong> — ${planPrice} per attending member (12 and over), covers event meals for 6 months. Children under 12 already eat free, so they're not charged for this.
+                {planSignup && planEligibleCount > 0 && (
                   <div style={{marginTop:4,fontSize:12.5,color:"var(--teal-800)"}}>
-                    Applies to {activeAttendingCount} attending member{activeAttendingCount===1?"":"s"}: +${planSignupCharge}
+                    Applies to {planEligibleCount} attending member{planEligibleCount===1?"":"s"} (12+): +${planSignupCharge}
                   </div>
                 )}
-                {planSignup && activeAttendingCount === 0 && (
-                  <div style={{marginTop:4,fontSize:12.5,color:"var(--muted)"}}>No active attending members selected yet — nothing will be charged for this until someone is marked attending.</div>
+                {planSignup && planEligibleCount === 0 && (
+                  <div style={{marginTop:4,fontSize:12.5,color:"var(--muted)"}}>No attending members 12 or over yet — nothing will be charged for this until someone eligible is marked attending.</div>
                 )}
               </span>
             </label>
@@ -626,7 +630,7 @@ function RsvpTab({ member, family }) {
           <div className="card" style={{marginTop:16}}>
             {planSignupCharge > 0 && (
               <div style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"var(--muted)",marginBottom:8}}>
-                <span>Half-Yearly Meal Plan × {activeAttendingCount}</span><span>${planSignupCharge}</span>
+                <span>Half-Yearly Meal Plan × {planEligibleCount}</span><span>${planSignupCharge}</span>
               </div>
             )}
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
