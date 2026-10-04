@@ -805,6 +805,7 @@ function MemberModal({ record, onClose, onSave }) {
   const [form, setForm] = useState({
     MemberID: record.MemberID || "", Name: record.Name || "", DOB: record.DOB ? String(record.DOB).slice(0,10) : "",
     Email: record.Email || "", Phone: record.Phone || "", FamilyGroup: record.FamilyGroup || "",
+    Language: record.Language || "English",
     MealPlan: record.MealPlan || "Yearly",
     MealPlanStartDate: record.MealPlanStartDate ? String(record.MealPlanStartDate).slice(0,10) : "",
     MealPlanEndDate: record.MealPlanEndDate ? String(record.MealPlanEndDate).slice(0,10) : "",
@@ -846,6 +847,15 @@ function MemberModal({ record, onClose, onSave }) {
         <div className="field"><label>Date of birth *</label><input type="date" value={form.DOB} onChange={set("DOB")} /></div>
         <div className="field"><label>Email <span style={{fontWeight:400,color:"var(--muted)"}}>(optional)</span></label><input value={form.Email} onChange={set("Email")} /></div>
         <div className="field"><label>Phone {isNew && "*"}</label><input value={form.Phone} onChange={set("Phone")} /></div>
+        <div className="field">
+          <label>WhatsApp message language</label>
+          <select value={form.Language} onChange={set("Language")}>
+            <option>English</option>
+            <option>Gujarati</option>
+            <option>Both</option>
+          </select>
+          <small style={{color:"var(--muted)",fontSize:12}}>Which language this member receives RSVP reminders, payment confirmations, and RSVP-open notices in. Most members should stay on English — pick Gujarati or Both only for those who specifically need it.</small>
+        </div>
         <div className="field">
           <label>Membership status</label>
           <select value={form.MembershipStatus} onChange={set("MembershipStatus")}>
