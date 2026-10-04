@@ -818,7 +818,6 @@ function MemberModal({ record, onClose, onSave }) {
     if (!form.Name.trim()) { setFormError("Name is required."); return; }
     if (!form.DOB) { setFormError("Date of birth is required."); return; }
     if (isNew) {
-      if (!form.Email.trim()) { setFormError("Email is required."); return; }
       if (!form.Phone.trim()) { setFormError("Phone is required."); return; }
     }
     for (let i = 0; i < familyMembers.length; i++) {
@@ -836,7 +835,7 @@ function MemberModal({ record, onClose, onSave }) {
         {formError && <div className="error-msg">{formError}</div>}
         <div className="field"><label>Name *</label><input value={form.Name} onChange={set("Name")} /></div>
         <div className="field"><label>Date of birth *</label><input type="date" value={form.DOB} onChange={set("DOB")} /></div>
-        <div className="field"><label>Email {isNew && "*"}</label><input value={form.Email} onChange={set("Email")} /></div>
+        <div className="field"><label>Email <span style={{fontWeight:400,color:"var(--muted)"}}>(optional)</span></label><input value={form.Email} onChange={set("Email")} /></div>
         <div className="field"><label>Phone {isNew && "*"}</label><input value={form.Phone} onChange={set("Phone")} /></div>
         <div className="field">
           <label>Membership status</label>
