@@ -646,7 +646,8 @@ function Dashboard({ token, user, onNavigate }) {
       {data && (
         <React.Fragment>
           <div className="stat-list">
-            <StatRow icon="👥" label="Members" value={data.memberCount} />
+            <StatRow icon="👥" label="Members" value={data.memberCount}
+              sub={data.adultMemberCount !== undefined ? `${data.adultMemberCount} over 12Y · ${data.childMemberCount} under 12Y` : undefined} />
             <StatRow icon="🎉" label="Upcoming Events" value={data.upcomingEventsCount} />
             <StatRow icon="📝" label="Bookings" value={data.bookingCount} />
             {data.pendingPaymentsCount !== undefined && <StatRow icon="💰" label="Pending Payments" value={data.pendingPaymentsCount} />}
@@ -689,8 +690,16 @@ function Dashboard({ token, user, onNavigate }) {
     </div>
   );
 }
-function StatRow({ icon, label, value }) {
-  return <div className="stat-row"><div className="sr-left"><span className="sr-icon">{icon}</span><span>{label}</span></div><div className="sr-value">{value}</div></div>;
+function StatRow({ icon, label, value, sub }) {
+  return (
+    <div className="stat-row">
+      <div className="sr-left"><span className="sr-icon">{icon}</span><span>{label}</span></div>
+      <div style={{textAlign:"right"}}>
+        <div className="sr-value">{value}</div>
+        {sub && <div style={{fontSize:11.5,color:"var(--muted)",marginTop:1}}>{sub}</div>}
+      </div>
+    </div>
+  );
 }
 function QuickAction({ icon, label, onClick }) {
   return <button className="qa-btn" onClick={onClick}><span className="qa-icon">{icon}</span><span className="qa-label">{label}</span></button>;
