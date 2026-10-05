@@ -371,23 +371,27 @@ function DetailsTab({ member, family }) {
 }
 
 const MEAL_CHOICES = ["No Meal", "Standard", "Jain"];
+// Prices are NOT listed here — Adult/Child are priced via publicConfig
+// (guestAdultPrice/guestChildPrice from Settings), passed into
+// guestCharge() at each call site. Under5 always stays free.
 const GUEST_TIERS = [
-  { key: "Adult", label: "Adult (12+)", price: 20 },
-  { key: "Child", label: "Child (5–12)", price: 10 },
-  { key: "Under5", label: "Under 5", price: 0 }
+  { key: "Adult", label: "Adult (12+)" },
+  { key: "Child", label: "Child (5–12)" },
+  { key: "Under5", label: "Under 5" }
 ];
 
-function memberCharge(ageCategory, mealPlan, meal) {
+function memberCharge(ageCategory, mealPlan, meal, mealPrice) {
   if (!meal || meal === "No Meal") return 0;
   const isPaidPlan = mealPlan === "Yearly" || mealPlan === "Half-Yearly";
   if (isPaidPlan) return 0;
   if (ageCategory === "Under 12Y") return 0;
-  return 15;
+  return mealPrice;
 }
-function guestCharge(tierKey, meal) {
+function guestCharge(tierKey, meal, adultPrice, childPrice) {
   if (!meal || meal === "No Meal") return 0;
-  const tier = GUEST_TIERS.find(t => t.key === tierKey);
-  return tier ? tier.price : 0;
+  if (tierKey === "Adult") return adultPrice;
+  if (tierKey === "Child") return childPrice;
+  return 0; // Under5 — always free
 }
 
 function CopyButton({ text }) {
@@ -441,6 +445,13 @@ function RsvpTab({ member, family }) {
   const updateGuest = (id, patch) => setGuests(guests.map(g => g.id === id ? { ...g, ...patch } : g));
   const removeGuest = (id) => setGuests(guests.filter(g => g.id !== id));
 
+  // Prices all come from publicConfig (Settings-backed), falling back to
+  // today's values if paymentInfo hasn't loaded yet or a row is missing —
+  // same fallback pattern as planPrice below.
+  const mealPrice = (paymentInfo && Number(paymentInfo.memberMealPrice)) || 15;
+  const guestAdultPrice = (paymentInfo && Number(paymentInfo.guestAdultPrice)) || 20;
+  const guestChildPrice = (paymentInfo && Number(paymentInfo.guestChildPrice)) || 10;
+
   // Half-Yearly Meal Plan only applies to members 12+ — kids under 12
   // already eat free at every event regardless of any plan (see
   // memberCharge above), so charging them $80 for the plan would be
@@ -450,9 +461,9 @@ function RsvpTab({ member, family }) {
   const planSignupCharge = planSignup ? planEligibleCount * planPrice : 0;
   // When planSignup is checked, the per-member meal charge is waived —
   // the Half-Yearly Meal Plan covers THIS event's meal too, not just
-  // future ones, so it isn't stacked on top of the normal $15 charge.
-  const total = everyone.reduce((sum, p) => (isActive(p) && attending[p.MemberID] !== false) ? sum + (planSignup ? 0 : memberCharge(p.AgeCategory, p.MealPlan, mealChoice[p.MemberID])) : sum, 0)
-    + guests.reduce((sum, g) => sum + guestCharge(g.Tier, g.Meal), 0)
+  // future ones, so it isn't stacked on top of the normal meal charge.
+  const total = everyone.reduce((sum, p) => (isActive(p) && attending[p.MemberID] !== false) ? sum + (planSignup ? 0 : memberCharge(p.AgeCategory, p.MealPlan, mealChoice[p.MemberID], mealPrice)) : sum, 0)
+    + guests.reduce((sum, g) => sum + guestCharge(g.Tier, g.Meal, guestAdultPrice, guestChildPrice), 0)
     + planSignupCharge;
 
   const submittingRef = useRef(false); // synchronous guard — catches double-taps React state can't catch in time
@@ -522,7 +533,7 @@ function RsvpTab({ member, family }) {
             const active = isActive(p);
             const isIn = active && attending[p.MemberID] !== false;
             const meal = mealChoice[p.MemberID] || "No Meal";
-            const charge = isIn ? (planSignup ? 0 : memberCharge(p.AgeCategory, p.MealPlan, meal)) : 0;
+            const charge = isIn ? (planSignup ? 0 : memberCharge(p.AgeCategory, p.MealPlan, meal, mealPrice)) : 0;
             const isPaidPlan = p.MealPlan === "Yearly" || p.MealPlan === "Half-Yearly";
 
             if (!active) {
@@ -597,7 +608,7 @@ function RsvpTab({ member, family }) {
             <div className="section-label" style={{margin:0}}>Guests (relatives only, Strictly NO FRIEND PLEASE)</div>
             <button className="btn ghost sm" type="button" onClick={addGuest}>+ Add Guest</button>
           </div>
-          <p style={{color:"var(--muted)",fontSize:12,marginTop:-4}}>Adult (12+) = $20 · Child (5–12) = $10 · Under 5 = Free — only charged if a meal is selected.</p>
+          <p style={{color:"var(--muted)",fontSize:12,marginTop:-4}}>Adult (12+) = ${guestAdultPrice} · Child (5–12) = ${guestChildPrice} · Under 5 = Free — only charged if a meal is selected.</p>
 
           {guests.map(g => (
             <div className="card" key={g.id} style={{marginBottom:10}}>
@@ -621,7 +632,7 @@ function RsvpTab({ member, family }) {
                 ))}
               </div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <div style={{fontSize:13,fontWeight:700,color:"var(--teal-900)"}}>Charge: ${guestCharge(g.Tier, g.Meal)}</div>
+                <div style={{fontSize:13,fontWeight:700,color:"var(--teal-900)"}}>Charge: ${guestCharge(g.Tier, g.Meal, guestAdultPrice, guestChildPrice)}</div>
                 <button className="btn danger sm" type="button" onClick={()=>removeGuest(g.id)}>Remove</button>
               </div>
             </div>
