@@ -1604,10 +1604,6 @@ function Reports({ token, user }) {
   };
 
   useEffect(() => {
-    if (data && data.pendingRsvpEventId && !pendingEventId) setPendingEventId(data.pendingRsvpEventId);
-  }, [data]);
-
-  useEffect(() => {
     if (!pendingEventId) { setPending(null); return; }
     setPendingError(""); setReminderResult(null);
     api("pendingRsvp", { eventId: pendingEventId }, token).then(r => setPending(r.data)).catch(e => setPendingError(e.message));
