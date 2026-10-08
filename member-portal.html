@@ -18,9 +18,9 @@
 
 <style>
   :root{
-    --teal-900:#5b1022; --teal-800:#74162b; --teal-700:#8b1e35; --teal-600:#a42a42; --teal-500:#b33a50;
-    --marigold-600:#b87816; --marigold-500:#d99b2b; --marigold-300:#f0c86b; --marigold-100:#fff5dc;
-    --bg:#f7f3ef; --card:#ffffff; --ink:#2b2522; --muted:#756c67; --border:#eadfd7;
+    --teal-900:#0d332e; --teal-800:#123f38; --teal-700:#14493f; --teal-600:#19584b; --teal-500:#1c6354;
+    --marigold-600:#c8891f; --marigold-500:#dfa53a; --marigold-300:#eec478; --marigold-100:#faecc9;
+    --bg:#eef4f0; --card:#ffffff; --ink:#1b2b26; --muted:#66756e; --border:#d9e3dc;
     --plum:#7a2e46; --plum-bg:#f7e9ee; --sage:#3f7a52; --sage-bg:#e7f1e9; --amber:#95651a; --amber-bg:#faf0dc;
   }
   *{box-sizing:border-box;}
@@ -86,47 +86,6 @@
 
   .empty-state{text-align:center;padding:30px 20px;color:var(--muted);font-size:13.5px;}
   .link-btn{background:none;border:none;color:var(--teal-700);font-weight:700;font-size:13.5px;cursor:pointer;padding:0;font-family:inherit;}
-
-/* ===== GGNZ MEMBER PORTAL V2 — UI ONLY ===== */
-body{background:#f3eee9;min-height:100vh;}
-.wrap{max-width:760px;background:var(--bg);}
-@media (min-width:900px){body{background:linear-gradient(135deg,#4c0c1c,#7a1930 55%,#efe7df);}.wrap{box-shadow:0 24px 70px rgba(43,20,25,.28);}}
-.hero{padding:24px 22px 22px;text-align:left;position:relative;background:linear-gradient(145deg,#5b1022,#7e1c32);}
-.hero:after{content:"";position:absolute;right:-60px;top:-70px;width:190px;height:190px;border-radius:50%;background:rgba(240,200,107,.12);}
-.hero img{width:58px!important;height:58px!important;margin:0 0 14px!important;position:relative;z-index:1;}
-.hero .org{font-size:10px;font-weight:800;letter-spacing:.16em;color:#f0c86b;position:relative;z-index:1;}
-.hero h1{font-size:30px;margin:5px 0 4px;position:relative;z-index:1;}
-.hero p{font-size:13px;color:#f0dfe3;position:relative;z-index:1;}
-.scallop{height:7px;background:linear-gradient(90deg,#d99b2b,#f0c86b,#d99b2b);}
-.content{padding:18px 16px 90px;}
-.card{border:1px solid #eadfd7;border-radius:18px;padding:18px;box-shadow:0 5px 18px rgba(64,40,30,.06);}
-.field input,.field select,.field textarea{border-radius:12px;background:#fbf9f7;border-color:#e4d9d1;padding:13px 14px;}
-.btn{border-radius:12px;padding:13px 18px;background:var(--teal-800);box-shadow:0 5px 12px rgba(91,16,34,.12);}
-.btn.gold{background:linear-gradient(135deg,#e4ad43,#d28d20);box-shadow:0 6px 15px rgba(184,120,22,.18);}
-.btn.ghost{background:#fff;box-shadow:none;}
-.section-label{font-size:11px;letter-spacing:.11em;color:#8a7c74;margin-bottom:12px;}
-.member-card{border-radius:22px;padding:22px 20px;background:linear-gradient(145deg,#5b1022 0%,#7c1b32 58%,#8d2940 100%);box-shadow:0 14px 30px rgba(91,16,34,.22);text-align:left;}
-.member-card:before{content:"";position:absolute;width:180px;height:180px;right:-75px;top:-85px;border:1px solid rgba(240,200,107,.22);border-radius:50%;box-shadow:0 0 0 28px rgba(240,200,107,.04),0 0 0 56px rgba(240,200,107,.025);}
-.member-card .mc-org{color:#f0c86b;font-weight:800;}
-.member-card .mc-name{font-size:25px;margin-top:8px;}
-.member-card .mc-id{font-size:12px;color:#ead8dc;}
-.member-card canvas,.member-card img{margin:18px auto 8px!important;}
-.member-card .mc-note{text-align:center;color:#f0dfe3;}
-.badge{border-radius:999px;padding:5px 10px;}
-.event-card{border-radius:16px;padding:16px;border-color:#eadfd7;box-shadow:0 4px 12px rgba(64,40,30,.05);}
-.event-card.selected{border-color:#d99b2b;background:#fff8e8;box-shadow:0 7px 18px rgba(184,120,22,.12);}
-.event-card .ev-name{font-size:16px;color:#5b1022;}
-.booking-row{padding:14px 0;}
-.link-btn{color:#74162b;}
-.portal-nav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;background:rgba(255,255,255,.94);border:1px solid #eadfd7;border-radius:18px;padding:7px;position:sticky;bottom:14px;z-index:10;box-shadow:0 10px 28px rgba(43,30,25,.14);backdrop-filter:blur(12px);}
-.portal-nav button{border:0;background:transparent;border-radius:12px;padding:9px 4px;font-family:inherit;color:#7d736e;font-size:11px;font-weight:800;cursor:pointer;}
-.portal-nav button.active{background:#f8e9ed;color:#74162b;}
-.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0;}
-.quick-card{border:1px solid #eadfd7;background:#fff;border-radius:16px;padding:14px;text-align:left;cursor:pointer;box-shadow:0 4px 12px rgba(64,40,30,.04);}
-.quick-card .q-icon{font-size:21px;margin-bottom:7px}.quick-card strong{display:block;font-size:13px}.quick-card span{font-size:11px;color:var(--muted)}
-.welcome-row{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 14px}.welcome-row .eyebrow{font-size:10px;font-weight:800;letter-spacing:.12em;color:#8a7c74;text-transform:uppercase}.welcome-row h2{margin:2px 0 0;font-size:25px;color:#5b1022}.avatar{width:42px;height:42px;border-radius:50%;background:#f4d9df;color:#74162b;display:flex;align-items:center;justify-content:center;font-weight:800}
-@media(max-width:520px){.content{padding:16px 13px 86px}.hero{padding:20px 18px}.hero h1{font-size:27px}.card{padding:16px}.member-card{padding:20px 17px}.quick-grid{gap:8px}.quick-card{padding:12px}.portal-nav{bottom:8px}}
-
 </style>
 </head>
 <body>
@@ -306,7 +265,7 @@ function LookupScreen({ onFound, onFeedback }) {
   return (
     <div className="content">
       <div className="card">
-        <div style={{fontSize:11,fontWeight:800,letterSpacing:".1em",color:"#8a7c74",textTransform:"uppercase"}}>Welcome to GGNZ</div><h3 style={{margin:"5px 0 7px",fontSize:26,color:"#5b1022"}}>Open your membership</h3><p className="hint" style={{margin:"0 0 18px"}}>Access your digital membership card, RSVP to events and view your bookings.</p>
+        <h3 style={{marginTop:0}}>Find your membership</h3>
         {error && <div className="error-msg">{error}</div>}
         <form onSubmit={submit}>
           <div className="field">
@@ -351,40 +310,32 @@ function MemberQR({ value }) {
    MEMBER HOME — card, RSVP, booking history
    ============================================================ */
 function MemberHome({ data, memberId, onSignOut }) {
-  const [tab, setTab] = useState("card");
+  const [tab, setTab] = useState("card"); // card | rsvp | bookings | feedback
   const { member, family } = data;
-  const firstName = (member.Name || "Member").split(" ")[0];
-  const initials = (member.Name || "M").split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase();
+
   return (
     <div className="content">
-      <div className="welcome-row">
-        <div><div className="eyebrow">Member portal</div><h2>Namaste, {firstName} 👋</h2></div>
-        <div className="avatar">{initials}</div>
-      </div>
       <div className="member-card">
-        <div className="mc-org">GARVI GUJARAT NZ · MEMBERSHIP</div>
+        <div className="mc-org">GGNZ Membership</div>
         <div className="mc-name">{member.Name}</div>
-        <div className="mc-id">Member ID · {member.MemberID}</div>
+        <div className="mc-id">{member.MemberID}</div>
         <MemberQR value={member.MemberID} />
-        <div className="mc-note">Show this QR code at GGNZ event check-in</div>
+        <div className="mc-note">Show this at check-in</div>
       </div>
-      <div className="quick-grid">
-        <button className="quick-card" onClick={()=>setTab("rsvp")}><div className="q-icon">🎉</div><strong>Upcoming events</strong><span>View events & RSVP</span></button>
-        <button className="quick-card" onClick={()=>setTab("bookings")}><div className="q-icon">🎟️</div><strong>My bookings</strong><span>See your registrations</span></button>
-        <button className="quick-card" onClick={()=>setTab("card")}><div className="q-icon">👨‍👩‍👧</div><strong>My family</strong><span>{family.length} family member{family.length===1?"":"s"}</span></button>
-        <button className="quick-card" onClick={()=>setTab("feedback")}><div className="q-icon">💬</div><strong>Feedback</strong><span>Tell us what you think</span></button>
+
+      <div className="card" style={{display:"flex",justifyContent:"space-around",padding:10,marginBottom:16,flexWrap:"wrap",gap:6}}>
+        <button className="link-btn" style={tab==="card"?{color:"var(--marigold-600)"}:{}} onClick={()=>setTab("card")}>Details</button>
+        <button className="link-btn" style={tab==="rsvp"?{color:"var(--marigold-600)"}:{}} onClick={()=>setTab("rsvp")}>RSVP</button>
+        <button className="link-btn" style={tab==="bookings"?{color:"var(--marigold-600)"}:{}} onClick={()=>setTab("bookings")}>My bookings</button>
+        <button className="link-btn" style={tab==="feedback"?{color:"var(--marigold-600)"}:{}} onClick={()=>setTab("feedback")}>Feedback</button>
       </div>
+
       {tab === "card" && <DetailsTab member={member} family={family} />}
       {tab === "rsvp" && <RsvpTab member={member} family={family} />}
       {tab === "bookings" && <BookingsTab memberId={memberId} />}
       {tab === "feedback" && <FeedbackForm onDone={()=>setTab("card")} />}
-      <div className="portal-nav">
-        <button className={tab==="card"?"active":""} onClick={()=>setTab("card")}>🏠<br/>Home</button>
-        <button className={tab==="rsvp"?"active":""} onClick={()=>setTab("rsvp")}>🎉<br/>Events</button>
-        <button className={tab==="bookings"?"active":""} onClick={()=>setTab("bookings")}>🎟️<br/>Bookings</button>
-        <button className={tab==="feedback"?"active":""} onClick={()=>setTab("feedback")}>💬<br/>Feedback</button>
-      </div>
-      <button className="link-btn" style={{display:"block",margin:"18px auto 0"}} onClick={onSignOut}>Look up someone else</button>
+
+      <button className="btn ghost btn-block" style={{marginTop:20}} onClick={onSignOut}>Look up someone else</button>
     </div>
   );
 }
