@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="apple-touch-icon.png">
 <link rel="manifest" href="portal-manifest.json">
-<meta name="theme-color" content="#800000">
+<meta name="theme-color" content="#35104a">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,9 +18,9 @@
 
 <style>
   :root{
-    --teal-900:#800000; --teal-800:#6e0000; --teal-700:#920d1b; --teal-600:#a61c2b; --teal-500:#b32636;
-    --marigold-600:#c8891f; --marigold-500:#dfa53a; --marigold-300:#eec478; --marigold-100:#faecc9;
-    --bg:#f8f5f2; --card:#ffffff; --ink:#2b2424; --muted:#766b68; --border:#e5deda;
+    --teal-900:#35104a; --teal-800:#48145f; --teal-700:#5b1b70; --teal-600:#742482; --teal-500:#8c2f8e;
+    --marigold-600:#c65a12; --marigold-500:#f0a51b; --marigold-300:#ffd36e; --marigold-100:#fff0c2;
+    --bg:#fff8eb; --card:#fffdf8; --ink:#302036; --muted:#786a79; --border:#f0dfc4;
     --plum:#7a2e46; --plum-bg:#f7e9ee; --sage:#3f7a52; --sage-bg:#e7f1e9; --amber:#95651a; --amber-bg:#faf0dc;
   }
   *{box-sizing:border-box;}
@@ -86,51 +86,6 @@
 
   .empty-state{text-align:center;padding:30px 20px;color:var(--muted);font-size:13.5px;}
   .link-btn{background:none;border:none;color:var(--teal-700);font-weight:700;font-size:13.5px;cursor:pointer;padding:0;font-family:inherit;}
-
-  /* UI polish only: same layout and markup, updated maroon theme and modern surfaces */
-  body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
-  .wrap{background:var(--bg);}
-  @media (min-width:900px){body{background:#650000;}.wrap{box-shadow:0 18px 60px rgba(40,0,0,.22);}}
-  .hero{background:linear-gradient(135deg,#800000 0%,#650000 100%);padding:28px 20px 22px;}
-  .hero h1{letter-spacing:-.025em;}
-  .hero p{color:#f0dada;}
-  .content{padding:24px 18px 60px;}
-  .card{border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:17px;box-shadow:0 5px 18px rgba(75,0,0,.045);transition:box-shadow .18s,border-color .18s;}
-  .field label{letter-spacing:.045em;font-size:11.5px;}
-  .field input,.field select,.field textarea{border-radius:10px;padding:12px 13px;background:#fff;transition:border-color .16s,box-shadow .16s;}
-  .field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--marigold-500);box-shadow:0 0 0 3px rgba(223,165,58,.2);}
-  .btn{border-radius:10px;padding:12px 18px;font-weight:800;box-shadow:0 3px 9px rgba(75,0,0,.09);transition:background .16s,transform .16s,box-shadow .16s;}
-  .btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 15px rgba(75,0,0,.14);}
-  .btn:active:not(:disabled){transform:translateY(0);}
-  .btn.gold{color:#4b170f;box-shadow:0 3px 10px rgba(157,107,22,.13);}
-  .btn.ghost{box-shadow:none;}
-  .btn:focus-visible,.link-btn:focus-visible{outline:2px solid var(--marigold-500);outline-offset:3px;}
-  .error-msg,.success-msg{border-radius:10px;padding:12px 13px;}
-  .member-card{background:linear-gradient(145deg,#800000 0%,#5d0000 100%);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px 20px;box-shadow:0 12px 28px rgba(75,0,0,.18);}
-  .member-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 0,rgba(223,165,58,.17),transparent 42%);pointer-events:none;}
-  .member-card .mc-name{letter-spacing:-.015em;}
-  .member-card .mc-id{color:#f0dada;}
-  .member-card .mc-note{color:#e0bcbc;}
-  .member-card canvas,.member-card img{box-shadow:0 4px 14px rgba(0,0,0,.12);}
-  .badge{border-radius:999px;padding:4px 10px;font-weight:800;}
-  .section-label{letter-spacing:.075em;font-size:11px;}
-  .family-row{padding:11px 0;}
-  .event-card{border-radius:13px;padding:16px;border-color:var(--border);box-shadow:0 3px 12px rgba(75,0,0,.035);transition:transform .15s,border-color .15s,box-shadow .15s,background .15s;}
-  .event-card:hover{border-color:#d6aaaa;box-shadow:0 7px 18px rgba(75,0,0,.07);transform:translateY(-1px);}
-  .event-card.selected{border-color:var(--marigold-500);background:#fbf0d4;box-shadow:0 0 0 2px rgba(223,165,58,.12);}
-  .event-card .ev-name{letter-spacing:-.01em;}
-  .booking-row{padding:13px 0;}
-  .empty-state{padding:34px 20px;}
-  .link-btn{color:var(--teal-700);border-radius:7px;transition:color .15s,background .15s;}
-  .link-btn:hover{color:var(--teal-900);}
-  .scallop{filter:drop-shadow(0 2px 2px rgba(75,0,0,.06));}
-  @media (max-width:520px){
-    .content{padding:20px 15px 52px;}
-    .card{padding:18px;border-radius:15px;}
-    .member-card{padding:22px 17px;border-radius:17px;}
-    .btn{min-height:44px;}
-  }
-
 </style>
 </head>
 <body>
@@ -138,7 +93,7 @@
   <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--teal-900);">
     <div style="text-align:center;">
       <div style="width:48px;height:48px;border:3px solid rgba(255,255,255,0.25);border-top-color:var(--marigold-500);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;"></div>
-      <div style="color:#f0dada;font-family:'Manrope',sans-serif;font-size:13px;">Loading&hellip;</div>
+      <div style="color:#c3d6cc;font-family:'Manrope',sans-serif;font-size:13px;">Loading&hellip;</div>
     </div>
   </div>
 </div>
