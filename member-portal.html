@@ -87,8 +87,88 @@
   .empty-state{text-align:center;padding:30px 20px;color:var(--muted);font-size:13.5px;}
   .link-btn{background:none;border:none;color:var(--teal-700);font-weight:700;font-size:13.5px;cursor:pointer;padding:0;font-family:inherit;}
 </style>
+<style>
+
+/* Diwali festive polish — decorative only; no layout or app logic changes */
+:root {
+  --diwali-purple: #35104a;
+  --diwali-purple-deep: #260b36;
+  --diwali-gold: #f0a51b;
+  --diwali-gold-light: #ffd36e;
+  --diwali-orange: #c65a12;
+}
+body {
+  background-image:
+    radial-gradient(circle at 8% 5%, rgba(240,165,27,.11) 0, transparent 22rem),
+    radial-gradient(circle at 92% 8%, rgba(140,47,142,.10) 0, transparent 24rem);
+}
+header, .header, .topbar, .app-header, nav {
+  /* Only a gentle festive finish if these existing selectors are present */
+  border-color: rgba(240,165,27,.28);
+}
+h1::after, h2::after {
+  content: " ✨";
+  color: var(--diwali-gold);
+  font-size: .72em;
+  white-space: nowrap;
+}
+button, .btn, [role="button"] {
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+button:hover, .btn:hover, [role="button"]:hover {
+  filter: brightness(1.035);
+}
+button:focus-visible, .btn:focus-visible, [role="button"]:focus-visible {
+  outline: 3px solid var(--diwali-gold-light);
+  outline-offset: 2px;
+}
+.card, .panel, .tile, .event-card, .booking-card {
+  border-color: rgba(198,90,18,.16);
+  box-shadow: 0 8px 24px rgba(53,16,74,.055);
+}
+.diwali-greeting {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  margin: 0 0 1rem;
+  padding: .65rem 1rem;
+  border: 1px solid rgba(240,165,27,.45);
+  border-radius: 14px;
+  color: #6d2a13;
+  background: linear-gradient(110deg, #fff0c2, #fffaf0 52%, #ffe2ad);
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-align: center;
+}
+.diwali-greeting .diya {
+  font-size: 1.25em;
+  line-height: 1;
+}
+.diwali-rangoli {
+  height: 4px;
+  margin: .15rem 0 1rem;
+  border-radius: 99px;
+  background: repeating-linear-gradient(90deg,
+    #8c2f8e 0 12px, #f0a51b 12px 24px, #c65a12 24px 36px,
+    #ffd36e 36px 48px);
+  opacity: .9;
+}
+@media (prefers-reduced-motion: reduce) {
+  button, .btn, [role="button"] { transition: none; }
+}
+
+</style>
 </head>
 <body>
+
+<div class="diwali-greeting" role="note" aria-label="Diwali greeting">
+  <span class="diya" aria-hidden="true">🪔</span>
+  <span>Shubh Deepavali · Wishing you light, joy and prosperity</span>
+  <span class="diya" aria-hidden="true">🪔</span>
+</div>
+<div class="diwali-rangoli" aria-hidden="true"></div>
+
 <div id="root">
   <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--teal-900);">
     <div style="text-align:center;">
