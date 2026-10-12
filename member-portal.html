@@ -86,6 +86,9 @@
 
   .empty-state{text-align:center;padding:30px 20px;color:var(--muted);font-size:13.5px;}
   .link-btn{background:none;border:none;color:var(--teal-700);font-weight:700;font-size:13.5px;cursor:pointer;padding:0;font-family:inherit;}
+
+  /* Temporarily hide the Half-Yearly Meal Plan sign-up on the member RSVP screen. */
+  .half-yearly-plan-signup-hidden { display: none !important; }
 </style>
 <style>
 
@@ -667,7 +670,7 @@ function RsvpTab({ member, family }) {
             );
           })}
 
-          <div className="card" style={{marginTop:14, background:"var(--bg)"}}>
+          <div className="card half-yearly-plan-signup-hidden" style={{marginTop:14, background:"var(--bg)"}}>
             <label style={{display:"flex",alignItems:"flex-start",gap:10,cursor:"pointer"}}>
               <input type="checkbox" checked={planSignup} onChange={e=>setPlanSignup(e.target.checked)} style={{marginTop:3,width:17,height:17,flexShrink:0}} />
               <span>
