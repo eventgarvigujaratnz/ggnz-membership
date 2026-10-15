@@ -901,6 +901,49 @@ function FeedbackForm({ onDone }) {
 /* ============================================================
    ROOT
    ============================================================ */
+function SocialConnect() {
+  const [social, setSocial] = useState({
+    facebookUrl: "https://www.facebook.com/GarviGujaratNZ",
+    instagramUrl: "https://www.instagram.com/garvigujaratnz/",
+    youtubeUrl: "https://www.youtube.com/@GARVIGUJARATNZ"
+  });
+
+  useEffect(() => {
+    api("publicConfig", {}).then(r => {
+      const cfg = r && r.data ? r.data : {};
+      setSocial(prev => ({
+        facebookUrl: cfg.facebookUrl || prev.facebookUrl,
+        instagramUrl: cfg.instagramUrl || prev.instagramUrl,
+        youtubeUrl: cfg.youtubeUrl || prev.youtubeUrl
+      }));
+    }).catch(() => {});
+  }, []);
+
+  const links = [
+    { label: "Facebook", url: social.facebookUrl, icon: "📘" },
+    { label: "Instagram", url: social.instagramUrl, icon: "📸" },
+    { label: "YouTube", url: social.youtubeUrl, icon: "▶️" }
+  ].filter(item => item.url);
+
+  return (
+    <div className="card social-connect" style={{margin:"18px 16px 22px",textAlign:"center",background:"linear-gradient(135deg,#fffdf8,#fff0c2)"}}>
+      <div style={{fontSize:22,marginBottom:4}}>💛 Stay Connected</div>
+      <p style={{fontSize:13,lineHeight:1.6,color:"var(--muted)",margin:"0 0 12px"}}>
+        Enjoy being part of GGNZ? Invite your family and friends to join our community. Together, we can celebrate our Gujarati roots, culture and future!
+      </p>
+      <div style={{display:"flex",justifyContent:"center",gap:8,flexWrap:"wrap"}}>
+        {links.map(item => (
+          <a key={item.label} href={item.url} target="_blank" rel="noopener noreferrer"
+            style={{display:"inline-flex",alignItems:"center",gap:5,padding:"9px 11px",borderRadius:20,background:"var(--teal-900)",color:"#fff",textDecoration:"none",fontSize:12.5,fontWeight:700}}>
+            <span>{item.icon}</span><span>{item.label}</span>
+          </a>
+        ))}
+      </div>
+      <div style={{fontSize:11.5,color:"var(--muted)",marginTop:12}}>Our Roots, Our Culture, Our Future.</div>
+    </div>
+  );
+}
+
 function App() {
   const [session, setSession] = useState(null); // { data, memberId }
   const [feedbackMode, setFeedbackMode] = useState(false);
@@ -921,6 +964,7 @@ function App() {
       ) : (
         <MemberHome data={session.data} memberId={session.memberId} onSignOut={() => setSession(null)} />
       )}
+      <SocialConnect />
     </div>
   );
 }
