@@ -595,7 +595,7 @@ function RsvpTab({ member, family }) {
   return (
     <div>
       <div ref={messageRef}>
-        {success && <div className="success-msg">{success}</div>}
+        {success && <><div className="success-msg">{success}</div><SocialConnect compact /></>}
         {error && <div className="error-msg">{error}</div>}
       </div>
 
@@ -901,7 +901,7 @@ function FeedbackForm({ onDone }) {
 /* ============================================================
    ROOT
    ============================================================ */
-function SocialConnect() {
+function SocialConnect({ compact = false }) {
   const [social, setSocial] = useState({
     facebookUrl: "https://www.facebook.com/GarviGujaratNZ",
     instagramUrl: "https://www.instagram.com/garvigujaratnz/",
@@ -924,6 +924,23 @@ function SocialConnect() {
     { label: "Instagram", url: social.instagramUrl, icon: "📸" },
     { label: "YouTube", url: social.youtubeUrl, icon: "▶️" }
   ].filter(item => item.url);
+
+  if (compact) {
+    return (
+      <div className="card social-connect social-connect-compact" style={{margin:"12px 0 16px",padding:14,textAlign:"center",background:"linear-gradient(135deg,#fffdf8,#fff0c2)"}}>
+        <div style={{fontSize:17,fontWeight:800,marginBottom:4,color:"var(--teal-900)"}}>💛 Stay connected with GGNZ</div>
+        <p style={{fontSize:12.5,lineHeight:1.5,color:"var(--muted)",margin:"0 0 10px"}}>Thanks for your RSVP! Follow us for event updates, photos and community news — and invite family and friends to join us.</p>
+        <div style={{display:"flex",justifyContent:"center",gap:7,flexWrap:"wrap"}}>
+          {links.map(item => (
+            <a key={item.label} href={item.url} target="_blank" rel="noopener noreferrer"
+              style={{display:"inline-flex",alignItems:"center",gap:5,padding:"8px 10px",borderRadius:20,background:"var(--teal-900)",color:"#fff",textDecoration:"none",fontSize:12,fontWeight:700}}>
+              <span>{item.icon}</span><span>{item.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="card social-connect" style={{margin:"18px 16px 22px",textAlign:"center",background:"linear-gradient(135deg,#fffdf8,#fff0c2)"}}>
