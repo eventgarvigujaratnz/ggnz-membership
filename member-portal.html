@@ -595,7 +595,17 @@ function RsvpTab({ member, family }) {
   return (
     <div>
       <div ref={messageRef}>
-        {success && <><div className="success-msg">{success}</div><SocialConnect compact /></>}
+        {success && <>
+          <div className="success-msg">{success}</div>
+          <div className="card" style={{margin:"10px 0 12px",padding:14,border:"1px solid var(--border)",background:"var(--card)"}}>
+            <div style={{fontWeight:800,color:"var(--teal-900)",marginBottom:5}}>💳 Payment screenshot</div>
+            <div style={{fontSize:12.5,lineHeight:1.55,color:"var(--muted)"}}>
+              If payment is required for your booking, please send your payment screenshot to <strong style={{color:"var(--ink)"}}>{(paymentInfo && paymentInfo.bookingContactName) || "our booking contact"}</strong> on WhatsApp:
+              {" "}{paymentInfo && paymentInfo.bookingContactPhone && <a href={"https://wa.me/" + String(paymentInfo.bookingContactPhone).replace(/\D/g, "").replace(/^0/, "64") + "?text=" + encodeURIComponent("Hi " + (paymentInfo.bookingContactName || "GGNZ team") + ", I have made payment for my GGNZ event RSVP. Please find my payment screenshot attached.")} target="_blank" rel="noopener noreferrer" style={{color:"var(--teal-700)",fontWeight:800,whiteSpace:"nowrap"}}>{paymentInfo.bookingContactPhone} · Open WhatsApp</a>}.
+            </div>
+          </div>
+          <SocialConnect compact />
+        </>} 
         {error && <div className="error-msg">{error}</div>}
       </div>
 
