@@ -591,8 +591,26 @@ function ApiErrorPanel({ message }) {
 }
 function formatDate(d) {
   if (!d) return "—";
-  const parsed = new Date(d);
-  if (isNaN(parsed)) return "—";
+
+  // IMPORTANT: Google Sheets date-only values (e.g. 1980-01-01)
+  // must be treated as calendar dates, not UTC timestamps. Using
+  // new Date("1980-01-01") can shift the displayed day backwards
+  // when the browser converts UTC to NZ local time.
+  const s = String(d).trim();
+  const dateOnly = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+  let parsed;
+
+  if (dateOnly) {
+    const year = Number(dateOnly[1]);
+    const month = Number(dateOnly[2]);
+    const day = Number(dateOnly[3]);
+    // Local calendar date — deliberately no timezone conversion.
+    parsed = new Date(year, month - 1, day);
+  } else {
+    parsed = new Date(d);
+  }
+
+  if (isNaN(parsed.getTime())) return "—";
   return parsed.toLocaleDateString("en-NZ", { day:"numeric", month:"short", year:"numeric" });
 }
 
