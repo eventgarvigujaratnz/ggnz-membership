@@ -592,25 +592,26 @@ function ApiErrorPanel({ message }) {
 function formatDate(d) {
   if (!d) return "—";
 
-  // IMPORTANT: Google Sheets date-only values (e.g. 1980-01-01)
-  // must be treated as calendar dates, not UTC timestamps. Using
-  // new Date("1980-01-01") can shift the displayed day backwards
-  // when the browser converts UTC to NZ local time.
-  const s = String(d).trim();
-  const dateOnly = s.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
-  let parsed;
-
-  if (dateOnly) {
-    const year = Number(dateOnly[1]);
-    const month = Number(dateOnly[2]);
-    const day = Number(dateOnly[3]);
-    // Local calendar date — deliberately no timezone conversion.
-    parsed = new Date(year, month - 1, day);
-  } else {
-    parsed = new Date(d);
+  // IMPORTANT: DOBs, event dates and RSVP deadlines are calendar dates,
+  // not timestamps. Google Apps Script can return them as ISO strings such
+  // as 2026-06-14T00:00:00.000Z. Do NOT pass a date-only value through
+  // new Date() first, because the UTC -> NZ conversion can move it back
+  // one day. Read the YYYY-MM-DD portion directly.
+  const raw = String(d).trim();
+  const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+  if (m) {
+    const year = Number(m[1]);
+    const month = Number(m[2]);
+    const day = Number(m[3]);
+    const check = new Date(year, month - 1, day);
+    if (check.getFullYear() === year && check.getMonth() === month - 1 && check.getDate() === day) {
+      return check.toLocaleDateString("en-NZ", { day:"numeric", month:"short", year:"numeric" });
+    }
   }
 
-  if (isNaN(parsed.getTime())) return "—";
+  // Fallback for any non-ISO date values.
+  const parsed = new Date(d);
+  if (isNaN(parsed)) return "—";
   return parsed.toLocaleDateString("en-NZ", { day:"numeric", month:"short", year:"numeric" });
 }
 
