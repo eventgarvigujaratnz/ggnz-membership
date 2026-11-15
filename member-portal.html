@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="apple-touch-icon.png">
 <link rel="manifest" href="portal-manifest.json">
-<meta name="theme-color" content="#35104a">
+<meta name="theme-color" content="#0b5d3b">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,22 +18,24 @@
 
 <style>
   :root{
-    --teal-900:#35104a; --teal-800:#48145f; --teal-700:#5b1b70; --teal-600:#742482; --teal-500:#8c2f8e;
-    --marigold-600:#c65a12; --marigold-500:#f0a51b; --marigold-300:#ffd36e; --marigold-100:#fff0c2;
-    --bg:#fff8eb; --card:#fffdf8; --ink:#302036; --muted:#786a79; --border:#f0dfc4;
-    --plum:#7a2e46; --plum-bg:#f7e9ee; --sage:#3f7a52; --sage-bg:#e7f1e9; --amber:#95651a; --amber-bg:#faf0dc;
+    --teal-900:#0b5d3b; --teal-800:#0e7147; --teal-700:#128454; --teal-600:#1b9b66; --teal-500:#2eaf79;
+    --marigold-600:#a56a00; --marigold-500:#d6a84f; --marigold-300:#f1d58b; --marigold-100:#fff7df;
+    --bg:#f4f8f5; --card:#ffffff; --ink:#18352a; --muted:#63756d; --border:#d8e6df;
+    --plum:#a52835; --plum-bg:#fae9eb; --sage:#2f6f45; --sage-bg:#e7f3eb; --amber:#95651a; --amber-bg:#faf0dc;
   }
   *{box-sizing:border-box;}
   html,body{overflow-x:hidden;max-width:100%;}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Manrope',sans-serif;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Manrope',sans-serif;background-image:radial-gradient(circle at 12px 18px, rgba(255,255,255,.95) 0 2px, transparent 2.5px),radial-gradient(circle at 72px 58px, rgba(255,255,255,.85) 0 1.5px, transparent 2px),linear-gradient(180deg,#eaf5ef 0%,#f4f8f5 48%,#fff 100%);background-size:110px 90px,150px 120px,100% 100%;}
   h1,h2,h3{font-family:'Newsreader',serif;}
-  .scallop{height:13px;background: radial-gradient(circle at 10px 0, transparent 9px, var(--marigold-500) 9.5px) 0 -1px/20px 13px repeat-x;}
+  .scallop{height:13px;background: radial-gradient(circle at 10px 0, transparent 9px, var(--christmas-red) 9.5px) 0 -1px/20px 13px repeat-x;}
 
   .wrap{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);}
-  @media (min-width:900px){ body{background:var(--teal-900);} .wrap{box-shadow:0 0 50px rgba(0,0,0,0.25);} }
+  @media (min-width:900px){ body{background-color:#0b5d3b;background-image:radial-gradient(circle at 10% 8%,rgba(255,255,255,.18) 0 2px,transparent 2.5px),radial-gradient(circle at 85% 18%,rgba(255,255,255,.14) 0 1.5px,transparent 2px),linear-gradient(180deg,#0b5d3b 0%,#073d29 100%);background-size:120px 100px,170px 130px,100% 100%;} .wrap{box-shadow:0 0 50px rgba(0,0,0,0.28);} }
 
-  .hero{background:var(--teal-900);color:#fff;padding:28px 20px 20px;text-align:center;}
+  .hero{background:linear-gradient(135deg,var(--teal-900) 0%,#08472f 70%,#7d1f2b 100%);color:#fff;padding:28px 20px 20px;text-align:center;position:relative;overflow:hidden;}
   .hero .org{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--marigold-300);}
+  .hero::before{content:'❄  ✦  ❄  ✦  ❄';position:absolute;top:8px;left:0;right:0;color:rgba(255,255,255,.28);font-size:13px;letter-spacing:18px;pointer-events:none;}
+  .hero::after{content:'🎄';position:absolute;right:12px;bottom:8px;font-size:28px;opacity:.32;pointer-events:none;}
   .hero h1{margin:4px 0 2px;font-size:24px;}
   .hero p{color:#c3d6cc;font-size:13px;margin:0;}
 
@@ -104,7 +106,10 @@
 body {
   background-image:
     radial-gradient(circle at 8% 5%, rgba(11,93,59,.10) 0, transparent 22rem),
-    radial-gradient(circle at 92% 8%, rgba(180,35,47,.09) 0, transparent 24rem);
+    radial-gradient(circle at 92% 8%, rgba(180,35,47,.10) 0, transparent 24rem),
+    radial-gradient(circle at 25% 35%, rgba(255,255,255,.85) 0 2px, transparent 2.5px),
+    radial-gradient(circle at 75% 55%, rgba(255,255,255,.75) 0 1.5px, transparent 2px);
+  background-size:auto,auto,120px 100px,170px 130px;
 }
 header, .header, .topbar, .app-header, nav {
   border-color: rgba(11,93,59,.25);
@@ -139,7 +144,7 @@ button:focus-visible, .btn:focus-visible, [role="button"]:focus-visible {
   border: 1px solid rgba(214,168,79,.55);
   border-radius: 14px;
   color: var(--christmas-green-deep);
-  background: linear-gradient(110deg, #f4fbf7, #fffaf5 52%, #fff2f3);
+  background: linear-gradient(110deg, #eaf6ef 0%, #ffffff 48%, #fff0f1 100%);
   font-weight: 700;
   letter-spacing: .02em;
   text-align: center;
@@ -153,8 +158,9 @@ button:focus-visible, .btn:focus-visible, [role="button"]:focus-visible {
   margin: .15rem 0 1rem;
   border-radius: 99px;
   background: repeating-linear-gradient(90deg,
-    var(--christmas-green) 0 12px, var(--christmas-red) 12px 24px,
-    var(--christmas-gold) 24px 36px, #f3f3e8 36px 48px);
+    var(--christmas-green) 0 10px, var(--christmas-red) 10px 20px,
+    var(--christmas-gold) 20px 30px, #ffffff 30px 40px);
+  box-shadow: 0 2px 8px rgba(7,61,41,.12);
   opacity: .9;
 }
 @media (prefers-reduced-motion: reduce) {
